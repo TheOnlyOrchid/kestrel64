@@ -1,17 +1,7 @@
-; src/print/print.asm
-; Example function: prINT
-; Writes a buffer to stdout on Windows x64.
-;
-; ABI (Win64):
-;   RCX = pointer to bytes
-;   RDX = byte length
-; Returns:
-;   RAX = bytes written (or 0 on failure)
-
 bits 64
 default rel
 
-global prINT
+global printCstr
 
 extern GetStdHandle
 extern WriteFile
@@ -22,26 +12,27 @@ extern IntToAscii
 
 section .text
 
-; prINT =================
+; printCstr =================
 ;
-; Writes an int to stdout
+; Writes a cstr to stdout
+;
+; 4294967295 characters or less please.
 ;
 ; args:
-; rax - the INT to prINT!
+; rcx - a pointer to the beginning of the cstr you want to print
+
 printCstr:
     ; Shadow space + stack alignment for Win64 calls
     sub rsp, 64
 
-    ; Save args for WriteFile call
-    mov qword [rsp + 56], rax
     ; get Cstr to print
-    call IntToAscii ; rax = ptr to cstr
-    mov qword [rsp + 56], rax
+    ; rsp + 56 = ptr to cstr
+    mov qword [rsp + 56], rcx
 
-    ; get cstr length
-    mov rcx, rax ; rcx = arg1
-    call GetCstrLength
-    mov dword [rsp + 48], eax
+    ; get length of cstr
+    call GetCstrLength ; takes rcx, returns rax
+    mov dword [rsp + 48], eax ; we kind of just assume that its less than 4b characters, if it was more this wouldnt print the whole thing
+    ; but i think thats a fine caveat
 
     ; HANDLE GetStdHandle(DWORD nStdHandle = -11)
     ; Returns in RAX
