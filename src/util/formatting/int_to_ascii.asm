@@ -25,14 +25,14 @@ IntToAscii:
     mov [r10], 0 ; Null terminator
     mov rbx, 10 ; divisor - i could actually make this into an argument so the function can turn abitrary-base numbers into ascii.
 
-    test rax,rax
-    jns .check_zero ; rax <= 0 
+    cmp rax, 0
+    jg .check_zero ; rax > 0
     neg rax ; make it positive for conversion.
-    mov r11, 1 ; using this as a flag, 1 = positive
+    mov r11, 0 ; using this as a flag, 0 = negative
     jmp .convert_loop
 
     .check_zero:
-        xor r11,r11 ; using this as a flag, 0 = positive
+        mov r11, 1 ; using this as a flag, 1 = positive
         test rax,rax
         jnz .convert_loop ; positive and not 0
 
@@ -42,7 +42,7 @@ IntToAscii:
         jmp .done 
 
     .convert_loop:
-        xor rdx,rdx
+        xor rdx,rdx ; at this point, inputs are positive
         div rbx ; rdx = remainder
         add dl, '0' ; move the base char into dl
         dec r10 ; work backwards in the string
