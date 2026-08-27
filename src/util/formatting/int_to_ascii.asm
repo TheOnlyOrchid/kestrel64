@@ -46,7 +46,7 @@ IntToAscii:
     .convert_loop:
         xor rdx,rdx ; at this point, inputs are positive
         div rbx ; rdx = remainder
-        add dl, '0' ; move the base char into dl
+        add dl, '0' ; offset int by char to get its corresponding ascii code
         dec r10 ; work backwards in the string
         mov [r10], dl
         
