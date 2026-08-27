@@ -9,6 +9,7 @@ global main
 extern prINT
 extern printCstr
 extern printChar
+extern printNewline
 
 section .rdata
     hello_cstr db "Hello World", 0
@@ -28,10 +29,14 @@ main:
     mov rax, [example_int]
     call prINT
     
+    call printNewline
+    call printNewline
+
     mov al, [example_char]
     call printChar
 
-    ; i wish to define a printChar and printNewLine in the future, i will place them here.
+    call printNewline
+    call printNewline
 
     ; print_cstr
     mov rcx, hello_cstr
