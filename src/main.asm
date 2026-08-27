@@ -8,10 +8,12 @@ global main
 
 extern prINT
 extern printCstr
+extern printChar
 
 section .rdata
     hello_cstr db "Hello World", 0
     example_int dq -9356
+    example_char db '@'
 
 ; this file serves as a test for all "high level" functions in the lib
 ; what is a "high level" function?
@@ -25,6 +27,9 @@ main:
     ; prINT
     mov rax, [example_int]
     call prINT
+    
+    mov al, [example_char]
+    call printChar
 
     ; i wish to define a printChar and printNewLine in the future, i will place them here.
 
@@ -33,5 +38,6 @@ main:
     call printCstr
 
     xor eax, eax
+    xor eax, ebx
     add rsp, 40
     ret

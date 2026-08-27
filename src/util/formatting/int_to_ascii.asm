@@ -12,6 +12,8 @@ section .text
 ; ==================
 ; Takes a signed int from RAX and returns a pointer to a cstr
 ; in RAX.
+;
+; This function only stores one string buffer - should you run the func again, it will override the previous value.
 ; 
 ; args:
 ; rax - the int to turn into a cstr
